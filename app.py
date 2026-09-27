@@ -109,7 +109,8 @@ section = st.sidebar.radio(
         "Data Analysis",
         "Linear Regression",
         "Logistic Regression",
-        "PCA Analysis"
+        "PCA Analysis",
+        "Live Prediction"
     ]
 )
 
@@ -436,7 +437,8 @@ elif section == "Logistic Regression":
             "Followers",
             "Followers_high",
             "Following/Followers",
-            "Posts/Followers"
+            "Posts/Followers",
+            "Labels"
         ],
         axis=1
     )
@@ -508,6 +510,133 @@ elif section == "Logistic Regression":
     )
 
 
+# ---------------------------------------------------------
+# LIVE PREDICTION
+# ---------------------------------------------------------
+
+elif section == "Live Prediction":
+
+    st.header("🔮 Live Social Media Prediction")
+
+    st.write(
+        "Enter social media account details to predict whether "
+        "the account belongs to the high-follower or low-follower group."
+    )
+
+    # Create classification target
+    df["Followers_high"] = (
+        df["Followers"] > df["Followers"].median()
+    ).astype(int)
+
+    # Same 7 features used for prediction
+    X = df[
+        [
+            "Following",
+            "Posts",
+            "Bio",
+            "Profile_Picture",
+            "External_Link",
+            "Mutual_Friends",
+            "Threads"
+        ]
+    ]
+
+    y = df["Followers_high"]
+
+    X_train, X_test, y_train, y_test = train_test_split(
+        X,
+        y,
+        test_size=0.2,
+        random_state=42,
+        stratify=y
+    )
+
+    model = LogisticRegression(
+        max_iter=1000
+    )
+
+    model.fit(
+        X_train,
+        y_train
+    )
+
+    st.subheader("Enter Account Details")
+
+    following = st.number_input(
+        "Following",
+        min_value=0,
+        value=100
+    )
+
+    posts = st.number_input(
+        "Posts",
+        min_value=0,
+        value=50
+    )
+
+    bio = st.selectbox(
+        "Bio",
+        sorted(df["Bio"].unique().tolist())
+    )
+
+    profile_picture = st.selectbox(
+        "Profile Picture",
+        sorted(df["Profile_Picture"].unique().tolist())
+    )
+
+    external_link = st.selectbox(
+        "External Link",
+        sorted(df["External_Link"].unique().tolist())
+    )
+
+    mutual_friends = st.number_input(
+        "Mutual Friends",
+        min_value=0,
+        value=10
+    )
+
+    threads = st.selectbox(
+        "Threads",
+        sorted(df["Threads"].unique().tolist())
+    )
+
+    if st.button("Predict"):
+
+        input_data = pd.DataFrame(
+            [[
+                following,
+                posts,
+                bio,
+                profile_picture,
+                external_link,
+                mutual_friends,
+                threads
+            ]],
+            columns=[
+                "Following",
+                "Posts",
+                "Bio",
+                "Profile_Picture",
+                "External_Link",
+                "Mutual_Friends",
+                "Threads"
+            ]
+        )
+
+        prediction = model.predict(input_data)[0]
+        probability = model.predict_proba(input_data)[0]
+
+        if prediction == 1:
+            st.success("Prediction: High-Follower Account")
+        else:
+            st.info("Prediction: Low-Follower Account")
+
+        confidence = probability[prediction] * 100
+
+        st.metric(
+            "Prediction Confidence",
+            f"{confidence:.2f}%"
+        )
 # ---------------------------------------------------------
 # PCA ANALYSIS
 # ---------------------------------------------------------
