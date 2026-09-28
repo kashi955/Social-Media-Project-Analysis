@@ -1,4 +1,4 @@
-##LIMFADD - Social Media Project Analysis##
+##LIMFADD - Social Media Project Analysis
 
 
 
@@ -83,6 +83,8 @@ The original features include:
  Scikit-learn
 
  Jupyter Notebook
+ 
+ Streamlit
 
 
 
@@ -227,12 +229,14 @@ The first two principal components explain approximately 53.06% of the total var
 LIMFADD/
 
 │
-
 ├── LIMFADD.csv
-
 ├── Limfadd.ipynb
+├── app.py
+├── requirements.txt
+└── Readme.md
 
-└── README.md
+
+ 
 
 
 
@@ -245,4 +249,26 @@ This project demonstrates a complete machine learning workflow on social media a
 
 
 The analysis uses Python and Scikit-learn to prepare the data, build machine learning models, evaluate their performance, and visualize the results.
+
+## 9. Live Prediction
+
+The project includes a Live Prediction feature developed using Streamlit.
+
+Users can enter social media account details such as:
+
+- Following
+- Posts
+- Bio
+- Profile Picture
+- External Link
+- Mutual Friends
+- Threads
+
+The Logistic Regression model predicts whether the account belongs to the High-Follower or Low-Follower group and displays the prediction confidence.
+
+## 10. Live Demo
+
+**Live Streamlit App:**
+
+https://social-media-project-analysis-cu4bkia8bc98lpptip76kt.streamlit.app/
 
